@@ -4,10 +4,6 @@ const checkStringLength = function(string, value){
   return length <= value;
 };
 
-console.log(checkStringLength('строка', 79)); // Значение больше длины строки (true)
-console.log(checkStringLength('строка', 6)); // Значение равно длине строки (true)
-console.log(checkStringLength('строка', 3)); // Значение меньше длины строки (false)
-
 //Функция для проверки, является ли строка палиндромом
 const isPalindrome = function(string){
   const changedString = string.replaceAll(' ', '').toLowerCase();
@@ -17,11 +13,6 @@ const isPalindrome = function(string){
   }
   return changedString === newString;
 };
-
-console.log(isPalindrome('топот')); //true
-console.log(isPalindrome('ДовОд')); //true
-console.log(isPalindrome('Кекс')); //false
-console.log(isPalindrome('Лёша на полке клопа нашёл ')); //true
 
 //Дополнительное задание
 const highlightNumbers = function(object){
@@ -35,9 +26,3 @@ const highlightNumbers = function(object){
   }
   return parseInt(numbers, 10);
 };
-
-console.log('-----------------');
-console.log(highlightNumbers('2023 год'));
-console.log(highlightNumbers('ECMAScript 2022'));
-console.log(highlightNumbers('агент 007'));
-console.log(highlightNumbers(-1.67));
