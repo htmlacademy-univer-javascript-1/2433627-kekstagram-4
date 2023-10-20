@@ -11,6 +11,8 @@ const MESSAGES = [ 'Всё отлично!', 'В целом всё неплох�
   'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!'
 ];
 
+const DESCRIPTIONS = ['Мое новое фото!', 'Хорошо посидели!', 'Мы с друзьями!', 'На отдыхе!', ')'];
+
 const PHOTO_DESCRIPTION_COUNT = 25;
 const MAX_PHOTO_ID = 25;
 const MAX_PHOTO_URL_ID = 25;
@@ -64,10 +66,11 @@ const createComments = () => ({
 const createPhotoDescription = () => ({
   id: getPhotoId(),
   url: `photos/${  getUrlId().toString()  }.jpg`,
-  description: 'Мое новое фото!',
+  description: getRandomArrayElement(DESCRIPTIONS),
   likes: getRandomInteger(MIN_LIKE_COUNT, MAX_LIKE_COUNT),
   comments: createComments(),
 });
 
-// eslint-disable-next-line no-unused-vars
-const photoDescriptions = Array.from({length: PHOTO_DESCRIPTION_COUNT}, createPhotoDescription);
+const getPhotoDescriptions = (count) => Array.from({length: count}, createPhotoDescription);
+
+const photoDescriptions = getPhotoDescriptions(PHOTO_DESCRIPTION_COUNT);
