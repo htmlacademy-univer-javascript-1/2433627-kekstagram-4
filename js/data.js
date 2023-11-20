@@ -20,6 +20,7 @@ const MAX_PHOTO_ID = 25;
 const MAX_PHOTO_URL_ID = 25;
 const MAX_LIKE_COUNT = 200;
 const MIN_LIKE_COUNT = 15;
+const MAX_COMMENT_COUNT = 30;
 
 const getCommentId = createId();
 const getPhotoId = getUniqueId(1, MAX_PHOTO_ID);
@@ -37,7 +38,7 @@ const createPhotoDescription = () => ({
   url: `photos/${  getUrlId().toString()  }.jpg`,
   description: getRandomArrayElement(DESCRIPTIONS),
   likes: getRandomInteger(MIN_LIKE_COUNT, MAX_LIKE_COUNT),
-  comments: createComments(),
+  comments: Array.from({length: getRandomInteger(0, MAX_COMMENT_COUNT)}, createComments)
 });
 
 const createPhotoDescriptions = () => Array.from({length: PHOTO_DESCRIPTION_COUNT}, createPhotoDescription);
