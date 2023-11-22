@@ -1,4 +1,5 @@
 import './functions.js';
-import {createPhotoDescriptions} from './data.js';
+import {photoDrawing} from './drawing.js';
 
-photoDescriptions = createPhotoDescriptions();
+photoDrawing();
+
