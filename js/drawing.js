@@ -1,11 +1,11 @@
 import {createPhotoDescriptions} from './data.js';
+const similarPhotos = createPhotoDescriptions();
 
 const photoDrawing = function() {
   const container = document.querySelector('.pictures');
   const pictureTemplate = document.querySelector('#picture').content.querySelector('.picture');
 
   const similarListFragment = document.createDocumentFragment();
-  const similarPhotos = createPhotoDescriptions();
 
   similarPhotos.forEach(({url, description, likes, comments}) => {
     const newPicture = pictureTemplate.cloneNode(true);
@@ -19,4 +19,4 @@ const photoDrawing = function() {
   container.appendChild(similarListFragment);
 };
 
-export {photoDrawing};
+export {photoDrawing, similarPhotos};

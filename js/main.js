@@ -1,5 +1,4 @@
 import './functions.js';
-import {photoDrawing} from './drawing.js';
+import './bigPicture.js';
 
-photoDrawing();
 
