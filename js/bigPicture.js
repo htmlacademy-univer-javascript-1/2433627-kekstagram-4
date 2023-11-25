@@ -41,6 +41,7 @@ const createBigPicture = function(index) {
   bigPictureWindow.querySelector('.likes-count').textContent = photo.likes;
   bigPictureWindow.querySelector('.comments-count').textContent = photo.comments.length;
   bigPictureWindow.querySelector('.social__caption').textContent = photo.description;
+
   createComments(photo.comments);
 };
 
@@ -63,6 +64,11 @@ function openBigPictureWindow () {
 function closeBigPictureWindow () {
   bigPictureWindow.classList.add('hidden');
   body.classList.remove('modal-open');
+
+  const commentsList = document.querySelectorAll('.social__comment');
+  for( let i = 0; i < commentsList.length; i++ ){
+    commentsList[i].outerHTML = '';
+  }
 
   document.removeEventListener('keydown', onDocumentKeydown);
 }
