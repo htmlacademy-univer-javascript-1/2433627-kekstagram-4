@@ -14,9 +14,8 @@ const body = document.querySelector('body');
 
 const socialComments = document.querySelector('.social__comments');
 
-const UPLOADED_COMMENTS = 5;
-
 const createComments = (comments) => {
+
   comments.forEach(({avatar, message, name}) => {
     const comment = document.createElement('li');
     comment.classList.add('social__comment');
@@ -37,7 +36,6 @@ const createComments = (comments) => {
 
     socialComments.appendChild(comment);
   });
-
   downloadComments();
 };
 
@@ -103,14 +101,15 @@ function updateCurrentSocialCommentsCount(visibleSocialCommentsLenght) {
 }
 
 function downloadComments() {
+  for (let i = 0; i < 5; i++) {
+    const hiddenSocialComment = socialComments.querySelector('.hidden');
+    if (hiddenSocialComment !== null) {
+      hiddenSocialComment.classList.remove('hidden');
+    }
+  }
   const hiddenSocialComments = socialComments.querySelectorAll('.hidden');
   const hiddenSocialCommentsLength = hiddenSocialComments.length;
-  const count = hiddenSocialCommentsLength < UPLOADED_COMMENTS ? hiddenSocialCommentsLength : UPLOADED_COMMENTS;
-
-  for (let i = 0; i < count; i++) {
-    hiddenSocialComments[i].classList.remove('hidden');
-  }
-
   const visibleSocialCommentsLenght = socialComments.childElementCount - hiddenSocialCommentsLength;
+
   updateCurrentSocialCommentsCount(visibleSocialCommentsLenght);
 }
