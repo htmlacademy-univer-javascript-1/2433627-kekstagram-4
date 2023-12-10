@@ -29,8 +29,13 @@ const createId = () => {
   };
 };
 
+const findDuplicates = (arr) => {
+  const duplicates = arr.filter((elem, index, elems) => elems.indexOf(elem) !== index);
+  return duplicates.length !== 0;
+};
+
 const isEscapeKey = (evt) => evt.key === 'Escape';
 
 const getRandomArrayElement = (arr) => arr[getRandomInteger(0, arr.length - 1)];
 
-export {getRandomArrayElement, getRandomInteger, getUniqueId, createId, isEscapeKey};
+export {getRandomArrayElement, getRandomInteger, getUniqueId, createId, isEscapeKey, findDuplicates};
