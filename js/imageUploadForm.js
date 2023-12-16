@@ -1,6 +1,7 @@
-import { isEscapeKey, findDuplicates } from './util.js';
+import { isEscapeKey, findDuplicates, showAlert } from './util.js';
 import './imageScale.js';
 import { hideSlider } from './imageEffects.js';
+import { sendData } from './api.js';
 
 
 const body = document.querySelector('body');
@@ -8,6 +9,7 @@ const imgUploadInput = document.querySelector('.img-upload__input');
 const imgUploadOverlay = document.querySelector('.img-upload__overlay');
 const imgUploadForm = document.querySelector('.img-upload__form');
 const closeButton = document.querySelector('.img-upload__cancel');
+const imgUploadSubmit = document.querySelector('.img-upload__submit');
 
 const textDescriptionField = imgUploadForm.querySelector('.text__description');
 const textHashtagsField = imgUploadForm.querySelector('.text__hashtags');
@@ -85,7 +87,27 @@ pristine.addValidator(
   'Ошибка хештегов!'
 );
 
-imgUploadForm.addEventListener('sibmit', (evt) => {
-  evt.preventDefault();
-  pristine.validate();
-});
+const setUserFormSubmit = () => {
+  imgUploadForm.addEventListener('submit', (evt) => {
+    evt.preventDefault();
+
+    const isValid = pristine.validate();
+    if (isValid) {
+      imgUploadSubmit.disabled = true;
+      sendData(new FormData(evt.target))
+        .then(closeUploadOverlay)
+        .catch(
+          (err) => {
+            showAlert(err.message);
+          }
+        )
+        .finally(imgUploadSubmit.disabled = false);
+    }
+    else {
+      showAlert(pristine.err);
+    }
+  });
+};
+
+
+export {setUserFormSubmit};
