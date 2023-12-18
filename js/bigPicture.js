@@ -4,7 +4,6 @@ import {isEscapeKey} from './util.js';
 const bigPictureWindow = document.querySelector('.big-picture');
 const closeButton = bigPictureWindow.querySelector('.big-picture__cancel');
 const bigPicture = bigPictureWindow.querySelector('.big-picture__img');
-const pictures = document.querySelectorAll('.picture__img');
 
 const currentSocialCommentsCount = document.querySelector('.current-comments-count');
 const commentsLoader = document.querySelector('.comments-loader');
@@ -73,12 +72,15 @@ function closeBigPictureWindow() {
   document.removeEventListener('keydown', onDocumentKeydown);
 }
 
-for (let i = 0; i < pictures.length; i++) {
-  pictures[i].addEventListener('click', () => {
-    openBigPictureWindow();
-    createBigPicture(i);
-  });
-}
+const addEventListener = () => {
+  const pictures = document.querySelectorAll('.picture__img');
+  for (let i = 0; i < pictures.length; i++) {
+    pictures[i].addEventListener('click', () => {
+      openBigPictureWindow();
+      createBigPicture(i);
+    });
+  }
+};
 
 closeButton.addEventListener('click', () => {
   closeBigPictureWindow();
@@ -112,4 +114,4 @@ function downloadComments() {
   updateCurrentSocialCommentsCount(visibleSocialCommentsLenght);
 }
 
-export {openBigPictureWindow, closeBigPictureWindow};
+export {openBigPictureWindow, closeBigPictureWindow, addEventListener};
