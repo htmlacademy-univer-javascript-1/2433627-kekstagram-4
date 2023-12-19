@@ -72,7 +72,7 @@ function closeBigPictureWindow() {
   document.removeEventListener('keydown', onDocumentKeydown);
 }
 
-const addEventListener = () => {
+const onPreviewClick = () => {
   const pictures = document.querySelectorAll('.picture__img');
   for (let i = 0; i < pictures.length; i++) {
     pictures[i].addEventListener('click', () => {
@@ -114,4 +114,4 @@ function downloadComments() {
   updateCurrentSocialCommentsCount(visibleSocialCommentsLenght);
 }
 
-export {openBigPictureWindow, closeBigPictureWindow, addEventListener};
+export {openBigPictureWindow, closeBigPictureWindow, onPreviewClick};
