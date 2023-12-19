@@ -1,23 +1,29 @@
-import { isEscapeKey, findDuplicates } from './util.js';
+import { isEscapeKey, findDuplicates, showAlert } from './util.js';
 import './imageScale.js';
 import { hideSlider } from './imageEffects.js';
-
+import { sendData } from './api.js';
 
 const body = document.querySelector('body');
 const imgUploadInput = document.querySelector('.img-upload__input');
 const imgUploadOverlay = document.querySelector('.img-upload__overlay');
 const imgUploadForm = document.querySelector('.img-upload__form');
 const closeButton = document.querySelector('.img-upload__cancel');
+const imgUploadSubmit = document.querySelector('.img-upload__submit');
 
 const textDescriptionField = imgUploadForm.querySelector('.text__description');
 const textHashtagsField = imgUploadForm.querySelector('.text__hashtags');
+
+const errorMessage = document.querySelector('.error');
+const successMessage = document.querySelector('.success');
+const successButton = successMessage.querySelector('.success__button');
+const errorButton = errorMessage.querySelector('.error__button');
 
 const HASHTAGS_MAX_COUNT = 5;
 const DESCRIPTION_MAX_LENGHT = 140;
 
 const isFocused = (element) => document.activeElement === element;
 
-const onDocumentKeydown = (evt) => {
+const onFormKeydown = (evt) => {
   if (isEscapeKey(evt) && !isFocused(textDescriptionField) && !isFocused(textHashtagsField)) {
     evt.preventDefault();
     closeUploadOverlay();
@@ -28,7 +34,7 @@ function openUploadOverlay() {
   imgUploadOverlay.classList.remove('hidden');
   body.classList.add('modal-open');
 
-  document.addEventListener('keydown', onDocumentKeydown);
+  document.addEventListener('keydown', onFormKeydown);
 }
 
 function closeUploadOverlay() {
@@ -37,7 +43,7 @@ function closeUploadOverlay() {
   imgUploadForm.reset();
   hideSlider();
 
-  document.removeEventListener('keydown', onDocumentKeydown);
+  document.removeEventListener('keydown', onFormKeydown);
 }
 
 imgUploadInput.addEventListener('change', () => {
@@ -46,6 +52,42 @@ imgUploadInput.addEventListener('change', () => {
 
 closeButton.addEventListener('click', () => {
   closeUploadOverlay();
+});
+
+const onMessageKeydown = (messageType) => (evt) => {
+  if (isEscapeKey(evt)) {
+    evt.preventDefault();
+    closeMessage(messageType);
+  }
+};
+
+function openMessage (messageType) {
+  messageType.classList.remove('hidden');
+  body.classList.add('modal-open');
+
+  document.addEventListener('keydown', onMessageKeydown(messageType));
+  document.removeEventListener('keydown', onFormKeydown);
+}
+
+function closeMessage (messageType) {
+  messageType.classList.add('hidden');
+  if (messageType === errorMessage) {
+    imgUploadOverlay.classList.remove('hidden');
+  }
+  else {
+    body.classList.remove('modal-open');
+  }
+
+  document.removeEventListener('keydown', onMessageKeydown(messageType));
+  document.addEventListener('keydown', onFormKeydown);
+}
+
+successButton.addEventListener('click', () => {
+  closeMessage(successMessage);
+});
+
+errorButton.addEventListener('click', () => {
+  closeMessage(errorMessage);
 });
 
 const pristine = new Pristine(imgUploadForm);
@@ -85,7 +127,33 @@ pristine.addValidator(
   'Ошибка хештегов!'
 );
 
-imgUploadForm.addEventListener('sibmit', (evt) => {
-  evt.preventDefault();
-  pristine.validate();
-});
+const setUserFormSubmit = () => {
+  imgUploadForm.addEventListener('submit', (evt) => {
+    evt.preventDefault();
+
+    const isValid = pristine.validate();
+    if (isValid) {
+      imgUploadSubmit.disabled = true;
+      sendData(new FormData(evt.target))
+        .then(
+          () => {
+            closeUploadOverlay();
+            openMessage(successMessage);
+          }
+        )
+        .catch(
+          () => {
+            imgUploadOverlay.classList.add('hidden');
+            openMessage(errorMessage);
+          }
+        )
+        .finally(imgUploadSubmit.disabled = false);
+    }
+    else {
+      showAlert(pristine.err);
+    }
+  });
+};
+
+
+export {setUserFormSubmit};
