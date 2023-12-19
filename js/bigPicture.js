@@ -73,9 +73,10 @@ function closeBigPictureWindow() {
 }
 
 const onPreviewClick = () => {
-  const pictures = document.querySelectorAll('.picture__img');
+  const pictures = document.querySelectorAll('.picture');
   for (let i = 0; i < pictures.length; i++) {
-    pictures[i].addEventListener('click', () => {
+    pictures[i].addEventListener('click', (evt) => {
+      evt.preventDefault();
       openBigPictureWindow();
       createBigPicture(i);
     });
