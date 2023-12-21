@@ -1,4 +1,4 @@
-import { isEscapeKey, findDuplicates, showAlert } from './util.js';
+import { isEscapeKey, findDuplicates} from './util.js';
 import './imageScale.js';
 import { hideSlider } from './imageEffects.js';
 import { sendData } from './api.js';
@@ -9,6 +9,7 @@ const imgUploadOverlay = document.querySelector('.img-upload__overlay');
 const imgUploadForm = document.querySelector('.img-upload__form');
 const closeButton = document.querySelector('.img-upload__cancel');
 const imgUploadSubmit = document.querySelector('.img-upload__submit');
+const imgPreview = document.querySelector('.img-upload__preview').querySelector('img');
 
 const textDescriptionField = imgUploadForm.querySelector('.text__description');
 const textHashtagsField = imgUploadForm.querySelector('.text__hashtags');
@@ -47,6 +48,8 @@ function closeUploadOverlay() {
 }
 
 imgUploadInput.addEventListener('change', () => {
+  const file = imgUploadInput.files[0];
+  imgPreview.src = URL.createObjectURL(file);
   openUploadOverlay();
 });
 
@@ -90,7 +93,14 @@ errorButton.addEventListener('click', () => {
   closeMessage(errorMessage);
 });
 
-const pristine = new Pristine(imgUploadForm);
+const pristine = new Pristine(imgUploadForm, {
+  classTo: 'img-upload__field-wrapper',
+  errorClass: 'img-upload__field-wrapper--invalid',
+  successClass: 'img-upload__field-wrapper--valid',
+  errorTextParent: 'img-upload__field-wrapper',
+  errorTextTag: 'h3',
+  errorTextClass: 'form__error'
+});
 
 function validateDescription(value) {
   return value.length <= DESCRIPTION_MAX_LENGHT;
@@ -100,19 +110,25 @@ function validateHashtags(value) {
   const hashtag = /^#[a-zа-ё0-9]{1,19}$/i;
 
   if (value === ''){
-    return true;
+    return { isValid: true, message: '' };
   }
 
   const hashtags = value.split(' ');
-  if (hashtags.length > HASHTAGS_MAX_COUNT && findDuplicates(hashtags)) {
-    return false;
+  if (hashtags.length > HASHTAGS_MAX_COUNT) {
+    return { isValid: false, message: 'Максимальное количество хештегов - 5!' };
+  }
+
+  if (findDuplicates(hashtags)) {
+    return { isValid: false, message: 'Хештеги не должны повторяться!' };
   }
 
   for (const tag of hashtags) {
     if (!hashtag.test(tag)){
-      return false;
+      return { isValid: false, message: 'Неправильный формат!' };
     }
   }
+
+  return { isValid: true, message: '' };
 }
 
 pristine.addValidator(
@@ -123,8 +139,14 @@ pristine.addValidator(
 
 pristine.addValidator(
   textHashtagsField,
-  validateHashtags,
-  'Ошибка хештегов!'
+  (value) => {
+    const validationResult = validateHashtags(value);
+    return validationResult.isValid;
+  },
+  (value) => {
+    const validationResult = validateHashtags(value);
+    return validationResult.message;
+  }
 );
 
 const setUserFormSubmit = () => {
@@ -148,9 +170,6 @@ const setUserFormSubmit = () => {
           }
         )
         .finally(imgUploadSubmit.disabled = false);
-    }
-    else {
-      showAlert(pristine.err);
     }
   });
 };
