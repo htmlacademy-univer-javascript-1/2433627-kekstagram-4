@@ -1,11 +1,10 @@
+import { onPreviewClick } from './bigPicture.js';
 let pictureData = [];
 
 const photoDrawing = function(data, filter = 'default') {
   const container = document.querySelector('.pictures');
   const pictureTemplate = document.querySelector('#picture').content.querySelector('.picture');
   const pictureListFragment = document.createDocumentFragment();
-
-  pictureData = data;
 
   let sortedData;
   switch (filter) {
@@ -19,6 +18,8 @@ const photoDrawing = function(data, filter = 'default') {
       sortedData = data.slice().sort((a, b) => b.comments.length - a.comments.length);
       break;
   }
+
+  pictureData = sortedData;
 
   sortedData.forEach(({url, description, likes, comments}) => {
     const newPicture = pictureTemplate.cloneNode(true);
@@ -35,6 +36,7 @@ const photoDrawing = function(data, filter = 'default') {
   });
 
   container.appendChild(pictureListFragment);
+  onPreviewClick();
 };
 
 export {photoDrawing, pictureData};
