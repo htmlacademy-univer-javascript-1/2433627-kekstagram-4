@@ -1,11 +1,11 @@
+const ALERT_SHOW_TIME = 5000;
+
 const findDuplicates = (arr) => {
   const duplicates = arr.filter((elem, index, elems) => elems.indexOf(elem) !== index);
   return duplicates.length !== 0;
 };
 
 const isEscapeKey = (evt) => evt.key === 'Escape';
-
-const ALERT_SHOW_TIME = 5000;
 
 const showAlert = (message) => {
   const alertContainer = document.createElement('div');

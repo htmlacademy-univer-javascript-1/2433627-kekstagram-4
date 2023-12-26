@@ -22,6 +22,13 @@ const errorButton = errorMessage.querySelector('.error__button');
 const HASHTAGS_MAX_COUNT = 5;
 const DESCRIPTION_MAX_LENGHT = 140;
 
+const errorMessages = {
+  HASHTAGS_COUNT: 'Максимальное количество хештегов - 5!',
+  HASHTAGS_DUPLICATES:'Хештеги не должны повторяться!',
+  HASHTAGS_FORMAT: 'Неправильный формат!',
+  DESCRIPTION_LENGHT: 'Не более 140 символов!'
+};
+
 const isFocused = (element) => document.activeElement === element;
 
 const onFormKeydown = (evt) => {
@@ -115,16 +122,16 @@ function validateHashtags(value) {
 
   const hashtags = value.split(' ');
   if (hashtags.length > HASHTAGS_MAX_COUNT) {
-    return { isValid: false, message: 'Максимальное количество хештегов - 5!' };
+    return { isValid: false, message: errorMessages.HASHTAGS_COUNT };
   }
 
   if (findDuplicates(hashtags)) {
-    return { isValid: false, message: 'Хештеги не должны повторяться!' };
+    return { isValid: false, message: errorMessages.HASHTAGS_DUPLICATES };
   }
 
   for (const tag of hashtags) {
     if (!hashtag.test(tag)){
-      return { isValid: false, message: 'Неправильный формат!' };
+      return { isValid: false, message: errorMessages.HASHTAGS_FORMAT };
     }
   }
 
@@ -134,7 +141,7 @@ function validateHashtags(value) {
 pristine.addValidator(
   textDescriptionField,
   validateDescription,
-  'Не более 140 символов!'
+  errorMessages.DESCRIPTION_LENGHT
 );
 
 pristine.addValidator(

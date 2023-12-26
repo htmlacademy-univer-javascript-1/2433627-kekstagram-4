@@ -1,5 +1,6 @@
 import { onPreviewClick } from './bigPicture.js';
-let pictureData = [];
+
+let picturesData = [];
 
 const photoDrawing = function(data, filter = 'default') {
   const container = document.querySelector('.pictures');
@@ -19,7 +20,7 @@ const photoDrawing = function(data, filter = 'default') {
       break;
   }
 
-  pictureData = sortedData;
+  picturesData = sortedData;
 
   sortedData.forEach(({url, description, likes, comments}) => {
     const newPicture = pictureTemplate.cloneNode(true);
@@ -39,4 +40,4 @@ const photoDrawing = function(data, filter = 'default') {
   onPreviewClick();
 };
 
-export {photoDrawing, pictureData};
+export {photoDrawing, picturesData};

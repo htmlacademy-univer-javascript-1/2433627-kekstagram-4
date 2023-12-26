@@ -1,4 +1,4 @@
-import {pictureData} from './drawing.js';
+import {picturesData} from './drawing.js';
 import {isEscapeKey} from './util.js';
 
 const bigPictureWindow = document.querySelector('.big-picture');
@@ -11,6 +11,9 @@ const body = document.querySelector('body');
 
 const socialComments = document.querySelector('.social__comments');
 
+const AVATAR_SIZE = '35';
+const COMMENTS_PORTION = 5;
+
 const createComments = (comments) => {
 
   comments.forEach(({avatar, message, name}) => {
@@ -22,8 +25,8 @@ const createComments = (comments) => {
     avatarImg.classList.add('social__picture');
     avatarImg.src = avatar;
     avatarImg.alt = name;
-    avatarImg.width = '35';
-    avatarImg.height = '35';
+    avatarImg.width = AVATAR_SIZE;
+    avatarImg.height = AVATAR_SIZE;
     comment.appendChild(avatarImg);
 
     const text = document.createElement('p');
@@ -37,7 +40,7 @@ const createComments = (comments) => {
 };
 
 const createBigPicture = (index) => {
-  const picture = pictureData[index];
+  const picture = picturesData[index];
   bigPicture.querySelector('img').src = picture.url;
   bigPictureWindow.querySelector('.likes-count').textContent = picture.likes;
   bigPictureWindow.querySelector('.comments-count').textContent = picture.comments.length;
@@ -102,7 +105,7 @@ function updateCurrentSocialCommentsCount(visibleSocialCommentsLenght) {
 }
 
 function downloadComments() {
-  for (let i = 0; i < 5; i++) {
+  for (let i = 0; i < COMMENTS_PORTION; i++) {
     const hiddenSocialComment = socialComments.querySelector('.hidden');
     if (hiddenSocialComment !== null) {
       hiddenSocialComment.classList.remove('hidden');
